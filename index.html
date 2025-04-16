@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOODOO - Trgovina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white">
+  <header class="p-6 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 flex justify-between items-center">
+    <h1 class="text-3xl font-bold tracking-widest">WOODOO</h1>
+    <nav class="space-x-6 text-lg">
+      <a href="#catalog" class="hover:text-yellow-300">Katalog</a>
+      <a href="#" onclick="goHome()" class="hover:text-yellow-300">Domov</a>
+    </nav>
+  </header>
+
+  <section id="catalog-section" class="block">
+    <div class="text-center py-12">
+      <h2 class="text-4xl font-bold text-purple-400 mb-4">Odkrij svoj stil</h2>
+      <p class="text-lg text-gray-300 mb-6">Klikni na izdelek za podrobnosti in nakup</p>
+      <input type="text" id="search" placeholder="Išči izdelke..." class="p-3 w-80 rounded-lg text-black mb-6">
+    </div>
+    <div id="catalog" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4 pb-20"></div>
+  </section>
+
+  <section id="product-section" class="hidden max-w-3xl mx-auto p-6 mt-8 bg-gray-50 rounded-xl text-black shadow">
+    <img id="product-image" class="w-full h-64 object-cover rounded-xl mb-6" src="" alt="Slika izdelka">
+    <h2 id="product-title" class="text-3xl font-bold text-purple-700 mb-4">Naslov</h2>
+    <p id="product-desc" class="text-gray-800 mb-4">Opis izdelka</p>
+    <p class="text-sm text-gray-600 mb-2">Velikosti: M, L, XL</p>
+    <p id="original-price" class="text-lg line-through text-gray-400 hidden"></p>
+    <p id="product-price" class="text-2xl font-bold text-green-600 mb-4"></p>
+    <label for="promo" class="block font-semibold mb-2">Promo koda:</label>
+    <input id="promo" type="text" placeholder="WOODOO10" class="border px-4 py-2 rounded w-full max-w-xs mb-3" />
+    <button onclick="applyPromo()" class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-500 transition">Uporabi kodo</button>
+    <a href="https://www.instagram.com/fashion__des1gn_slo" target="_blank" class="block mt-6 text-center bg-pink-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-500">Naroči preko Instagrama</a>
+    <a href="#" onclick="goHome()" class="block mt-4 text-purple-600 text-center underline">⟵ Nazaj v katalog</a>
+  </section>
+
+  <footer class="bg-zinc-900 py-6 text-center text-gray-500 mt-16">
+    <p>&copy; 2025 WOODOO. Vse pravice pridržane.</p>
+  </footer>
+
+  <script>
+    const products = [{"name": "Denim Tears — Komplet (Hoodie + Hlače)", "price": "130,00 €", "desc": "Topel in udoben komplet za vsak dan.", "image": "Denim_Tears_Hoodie_Pants.jpg"}, {"name": "LV — Superge", "price": "250,00 €", "desc": "Luksuzne superge za vsak stil.", "image": "LV_Superge.jpg"}, {"name": "Denim Tears — Komplet (Shorts + Tee)", "price": "100,00 €", "desc": "Lahka kombinacija za tople dni.", "image": "Denim_Tears_Shorts_Tee.jpg"}, {"name": "Denim Tears — Hoodie", "price": "84,00 €", "desc": "Topel hoodie z unikatnim printom.", "image": "Denim_Tears_Hoodie_Black.jpg"}, {"name": "CORTIEZ — Majca", "price": "50,00 €", "desc": "Minimalistična majca za vsak dan.", "image": "CORTIEZ_Majca.jpg"}, {"name": "SUPREME — Majca", "price": "50,00 €", "desc": "Klasična bela majca z logotipom.", "image": "SUPREME_Majca.jpg"}, {"name": "Trapstar — Komplet (Shorts + Tee)", "price": "100,00 €", "desc": "Urban komplet za prosti čas.", "image": "Trapstar_Shorts_Tee.jpg"}, {"name": "Trapstar — Komplet", "price": "130,00 €", "desc": "Klasika v trap streetwear stilu.", "image": "Trapstar_Complete.jpg"}, {"name": "SYNA — Komplet", "price": "130,00 €", "desc": "Ulični komplet iz kakovostnega materiala.", "image": "SYNA_Complete.jpg"}, {"name": "Palm Angels — Kratke hlače", "price": "64,00 €", "desc": "Poletne kratke hlače s palmo.", "image": "PalmAngels_Shorts.jpg"}, {"name": "SAGO Studio — Bandana Shorts", "price": "64,00 €", "desc": "Bandana motiv z edinstvenim karakterjem.", "image": "SAGO_Bandana.jpg"}, {"name": "SYNA — Komplet (Kofta + Hlače)", "price": "130,00 €", "desc": "Stilski komplet za vsak dan.", "image": "SYNA_Kofta_Hlace.jpg"}];
+
+    const catalog = document.getElementById('catalog');
+
+    function renderProducts(list) {{
+      catalog.innerHTML = '';
+      list.forEach(p => {{
+        const item = document.createElement('div');
+        item.className = 'bg-white text-black p-4 rounded-xl shadow-lg hover:shadow-2xl transition cursor-pointer';
+        item.onclick = () => showProduct(p);
+        item.innerHTML = `
+          <img src="images/${{p.image}}" alt="${{p.name}}" class="rounded-lg mb-4 w-full h-48 object-cover">
+          <h3 class="text-lg font-bold mb-1">${{p.name}}</h3>
+          <p class="text-gray-700 mb-1">${{p.desc}}</p>
+          <p class="text-sm text-gray-600">Velikosti: S, M, L, XL</p>
+          <p class="text-purple-800 font-semibold mb-3">${{p.price}}</p>
+          <p class="text-center text-sm text-gray-500">Klikni za več informacij</p>
+        `;
+        catalog.appendChild(item);
+      }});
+    }}
+
+    function showProduct(p) {{
+      document.getElementById('catalog-section').classList.add('hidden');
+      document.getElementById('product-section').classList.remove('hidden');
+      document.getElementById('product-title').textContent = p.name;
+      document.getElementById('product-desc').textContent = p.desc;
+      document.getElementById('product-price').textContent = p.price;
+      document.getElementById('product-image').src = 'images/' + p.image;
+      document.getElementById('original-price').classList.add('hidden');
+      document.getElementById('promo').value = '';
+    }}
+
+    function goHome() {{
+      document.getElementById('catalog-section').classList.remove('hidden');
+      document.getElementById('product-section').classList.add('hidden');
+    }}
+
+    function applyPromo() {{
+      const promoInput = document.getElementById("promo").value.trim().toUpperCase();
+      const priceEl = document.getElementById("product-price");
+      const original = parseFloat(priceEl.textContent.replace('€','').replace(',','.'));
+      if (promoInput === "WOODOO10" && !isNaN(original)) {{
+        document.getElementById("original-price").textContent = original.toFixed(2).replace('.', ',') + ' €';
+        document.getElementById("original-price").classList.remove("hidden");
+        const discounted = (original * 0.9).toFixed(2).replace('.', ',') + ' €';
+        priceEl.textContent = discounted;
+      }} else {{
+        alert("Promocijska koda ni veljavna.");
+      }}
+    }}
+
+    document.getElementById('search').addEventListener('input', e => {{
+      const value = e.target.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(value));
+      renderProducts(filtered);
+    }});
+
+    renderProducts(products);
+  </script>
+</body>
+</html>
